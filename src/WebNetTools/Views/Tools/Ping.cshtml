@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section scripts
+{
+
+    <script type="text/javascript">
+    function send_ping()
+    {
+        $(".js-result").html("...");
+        $.post("/Tools/DoPing", { host: $(".js-host").val() })
+            .done((data) =>
+            {
+                var items = data.result;
+                var text = "";
+                for (var i = 0; i < items.length; i++)
+                {
+                    var item = items[i];
+                    text += "IP: " + item.ip + " TTL:" + item.ttl + " " + item.status+"<br/>";
+                }
+
+                $(".js-result").html(text);
+            })
+            .error((err) =>
+            {
+                $(".js-result").text("error: "+err);
+            });
+    };
+
+    $(document).ready(()=>
+    {
+        $(".js-send").click(send_ping);
+    });
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Ping</h2>
+        <input type="text" class="js-host" value="127.0.0.1" />
+        <button class="btn btn-primary js-send">Send ping</button>
+        <br/>
+        <br />
+        <div class="js-result">
+            &nbsp;
+        </div>
+    </div>
+</div>
